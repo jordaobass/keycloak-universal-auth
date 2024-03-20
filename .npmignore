@@ -1,0 +1,11 @@
+examples/
+tests/
+.claude/
+.git/
+.github/
+.vite/
+coverage/
+src/
+*.config.ts
+tsconfig*.json
+.env*

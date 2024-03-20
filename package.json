@@ -1,0 +1,90 @@
+{
+  "name": "keycloak-universal-auth",
+  "version": "0.1.0",
+  "description": "Biblioteca universal de autenticação Keycloak para Angular, React, Vue e Vanilla JS",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./angular": {
+      "import": "./dist/angular/index.js",
+      "require": "./dist/angular/index.cjs",
+      "types": "./dist/angular/index.d.ts"
+    },
+    "./react": {
+      "import": "./dist/react/index.js",
+      "require": "./dist/react/index.cjs",
+      "types": "./dist/react/index.d.ts"
+    },
+    "./vue": {
+      "import": "./dist/vue/index.js",
+      "require": "./dist/vue/index.cjs",
+      "types": "./dist/vue/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "keycloak",
+    "auth",
+    "authentication",
+    "oidc",
+    "angular",
+    "react",
+    "vue",
+    "universal",
+    "sso"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "peerDependencies": {
+    "keycloak-js": ">=25.0.0",
+    "@angular/core": ">=16.0.0",
+    "@angular/common": ">=16.0.0",
+    "@angular/router": ">=16.0.0",
+    "react": ">=18.0.0",
+    "vue": ">=3.3.0",
+    "rxjs": ">=7.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@angular/core": { "optional": true },
+    "@angular/common": { "optional": true },
+    "@angular/router": { "optional": true },
+    "react": { "optional": true },
+    "vue": { "optional": true },
+    "rxjs": { "optional": true }
+  },
+  "devDependencies": {
+    "keycloak-js": "^25.0.6",
+    "typescript": "^5.4.0",
+    "vite": "^5.2.0",
+    "vite-plugin-dts": "^3.8.0",
+    "vitest": "^1.4.0",
+    "@testing-library/react": "^14.2.0",
+    "@vue/test-utils": "^2.4.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "vue": "^3.4.0",
+    "rxjs": "^7.8.0"
+  }
+}
