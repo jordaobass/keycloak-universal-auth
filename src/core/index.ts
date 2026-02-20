@@ -1,6 +1,7 @@
 export { KeycloakAuth } from './keycloak-auth';
 export { TokenManager } from './token-manager';
 export { EventEmitter } from './event-emitter';
+export { INITIAL_STATE } from './constants';
 export { KeycloakAuthError, KeycloakInitError, TokenRefreshError } from './errors';
 export type {
   KeycloakAuthConfig,

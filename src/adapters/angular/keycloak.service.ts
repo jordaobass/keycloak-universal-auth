@@ -1,6 +1,7 @@
 import { Injectable, Inject, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, map, distinctUntilChanged } from 'rxjs';
 import { KeycloakAuth } from '../../core/keycloak-auth';
+import { INITIAL_STATE } from '../../core/constants';
 import type {
   KeycloakAuthConfig,
   KeycloakAuthState,
@@ -10,23 +11,11 @@ import type {
 } from '../../core/types';
 import { KEYCLOAK_CONFIG } from './keycloak.tokens';
 
-const INITIAL_STATE: KeycloakAuthState = {
-  initialized: false,
-  authenticated: false,
-  token: undefined,
-  refreshToken: undefined,
-  idToken: undefined,
-  tokenParsed: undefined,
-  userProfile: undefined,
-  roles: [],
-  resourceRoles: {},
-};
-
 /** Service Angular que encapsula o core de autenticação Keycloak */
 @Injectable({ providedIn: 'root' })
 export class KeycloakService implements OnDestroy {
   private readonly auth: KeycloakAuth;
-  private readonly stateSubject = new BehaviorSubject<KeycloakAuthState>(INITIAL_STATE);
+  private readonly stateSubject = new BehaviorSubject<KeycloakAuthState>({ ...INITIAL_STATE });
   private unsubscribe: (() => void) | null = null;
 
   /** Estado completo como Observable */
@@ -63,7 +52,6 @@ export class KeycloakService implements OnDestroy {
     });
   }
 
-  /** Inicializa a conexão com o Keycloak */
   async init(): Promise<boolean> {
     return this.auth.init();
   }
@@ -76,32 +64,26 @@ export class KeycloakService implements OnDestroy {
     return this.auth.logout(options);
   }
 
-  /** Verifica se o usuário possui uma role de realm */
   hasRealmRole(role: string): boolean {
     return this.auth.hasRealmRole(role);
   }
 
-  /** Verifica se o usuário possui uma role de recurso */
   hasResourceRole(role: string, resource?: string): boolean {
     return this.auth.hasResourceRole(role, resource);
   }
 
-  /** Retorna o token atual */
   getToken(): string | undefined {
     return this.auth.getToken();
   }
 
-  /** Atualiza o token se necessário */
   async updateToken(minValidity = 30): Promise<boolean> {
     return this.auth.updateToken(minValidity);
   }
 
-  /** Registra listener para eventos do Keycloak */
   onEvent(event: KeycloakAuthEvent, listener: () => void): () => void {
     return this.auth.onEvent(event, listener);
   }
 
-  /** Acesso direto ao estado atual (snapshot) */
   get state(): KeycloakAuthState {
     return this.auth.state;
   }

@@ -2,6 +2,7 @@ import Keycloak from 'keycloak-js';
 import { EventEmitter } from './event-emitter';
 import { TokenManager } from './token-manager';
 import { KeycloakInitError } from './errors';
+import { INITIAL_STATE } from './constants';
 import type {
   KeycloakAuthConfig,
   KeycloakAuthState,
@@ -13,18 +14,6 @@ import type {
   KeycloakRegisterOptions,
 } from './types';
 
-const INITIAL_STATE: KeycloakAuthState = {
-  initialized: false,
-  authenticated: false,
-  token: undefined,
-  refreshToken: undefined,
-  idToken: undefined,
-  tokenParsed: undefined,
-  userProfile: undefined,
-  roles: [],
-  resourceRoles: {},
-};
-
 /** Classe principal — wrapper sobre keycloak-js */
 export class KeycloakAuth implements IKeycloakAuth {
   private readonly keycloak: Keycloak;
@@ -32,6 +21,7 @@ export class KeycloakAuth implements IKeycloakAuth {
   private readonly eventEmitter = new EventEmitter<KeycloakAuthEvent>();
   private readonly stateListeners = new Set<StateChangeListener>();
   private _state: KeycloakAuthState = { ...INITIAL_STATE };
+  private _initialized = false;
 
   constructor(private readonly config: KeycloakAuthConfig) {
     this.keycloak = new Keycloak({
@@ -57,22 +47,18 @@ export class KeycloakAuth implements IKeycloakAuth {
     return this.keycloak;
   }
 
-  /** Inicializa a conexão com o Keycloak */
+  /** Inicializa a conexão com o Keycloak (idempotente — chamadas repetidas são ignoradas) */
   async init(): Promise<boolean> {
+    if (this._initialized) return this._state.authenticated;
+
     this.registerKeycloakCallbacks();
 
     try {
       const authenticated = await this.keycloak.init(
-        this.config.initOptions ?? {
-          onLoad: 'check-sso',
-          silentCheckSsoRedirectUri:
-            typeof window !== 'undefined'
-              ? `${window.location.origin}/silent-check-sso.html`
-              : undefined,
-          pkceMethod: 'S256',
-        },
+        this.config.initOptions ?? this.buildDefaultInitOptions(),
       );
 
+      this._initialized = true;
       this.syncState();
       this._state.initialized = true;
       this.notifyStateListeners();
@@ -138,9 +124,20 @@ export class KeycloakAuth implements IKeycloakAuth {
     this.tokenManager.stop();
     this.eventEmitter.removeAll();
     this.stateListeners.clear();
+    this._initialized = false;
   }
 
-  /** Registra os callbacks nativos do keycloak-js */
+  private buildDefaultInitOptions() {
+    return {
+      onLoad: 'check-sso' as const,
+      silentCheckSsoRedirectUri:
+        typeof window !== 'undefined'
+          ? `${window.location.origin}/silent-check-sso.html`
+          : undefined,
+      pkceMethod: 'S256' as const,
+    };
+  }
+
   private registerKeycloakCallbacks(): void {
     this.keycloak.onAuthSuccess = () => {
       this.syncState();
@@ -175,7 +172,6 @@ export class KeycloakAuth implements IKeycloakAuth {
     };
   }
 
-  /** Sincroniza o estado interno com o keycloak-js */
   private syncState(): void {
     this._state = {
       ...this._state,
@@ -209,12 +205,18 @@ export class KeycloakAuth implements IKeycloakAuth {
       this._state = { ...this._state, userProfile: profile };
       this.notifyStateListeners();
     } catch {
-      // Perfil não disponível — não bloqueia a inicialização
+      console.warn('[keycloak-universal-auth] Não foi possível carregar o perfil do usuário');
     }
   }
 
   private notifyStateListeners(): void {
     const snapshot = this.state;
-    this.stateListeners.forEach((listener) => listener(snapshot));
+    this.stateListeners.forEach((listener) => {
+      try {
+        listener(snapshot);
+      } catch (error) {
+        console.error('[keycloak-universal-auth] Erro no listener de estado:', error);
+      }
+    });
   }
 }

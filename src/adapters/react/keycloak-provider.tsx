@@ -1,19 +1,8 @@
 import { useState, useEffect, useRef, type ReactNode } from 'react';
 import { KeycloakAuth } from '../../core/keycloak-auth';
+import { INITIAL_STATE } from '../../core/constants';
 import type { KeycloakAuthConfig, KeycloakAuthState } from '../../core/types';
 import { KeycloakContext } from './keycloak-context';
-
-const INITIAL_STATE: KeycloakAuthState = {
-  initialized: false,
-  authenticated: false,
-  token: undefined,
-  refreshToken: undefined,
-  idToken: undefined,
-  tokenParsed: undefined,
-  userProfile: undefined,
-  roles: [],
-  resourceRoles: {},
-};
 
 export interface KeycloakProviderProps {
   config: KeycloakAuthConfig;
@@ -41,8 +30,10 @@ export function KeycloakProvider({
   onAuthSuccess,
   onAuthError,
 }: KeycloakProviderProps) {
-  const [state, setState] = useState<KeycloakAuthState>(INITIAL_STATE);
+  const [state, setState] = useState<KeycloakAuthState>({ ...INITIAL_STATE });
   const authRef = useRef<KeycloakAuth | null>(null);
+  const callbacksRef = useRef({ onAuthSuccess, onAuthError });
+  callbacksRef.current = { onAuthSuccess, onAuthError };
 
   useEffect(() => {
     const auth = new KeycloakAuth(config);
@@ -53,17 +44,18 @@ export function KeycloakProvider({
     auth
       .init()
       .then((authenticated) => {
-        if (authenticated) onAuthSuccess?.();
+        if (authenticated) callbacksRef.current.onAuthSuccess?.();
       })
       .catch((error) => {
-        onAuthError?.(error instanceof Error ? error : new Error(String(error)));
+        const err = error instanceof Error ? error : new Error(String(error));
+        callbacksRef.current.onAuthError?.(err);
       });
 
     return () => {
       unsubscribe();
       auth.destroy();
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps -- inicializa apenas uma vez
 
   return (
     <KeycloakContext.Provider value={{ ...state, auth: authRef.current }}>

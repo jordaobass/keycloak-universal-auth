@@ -1,6 +1,6 @@
 {
   "name": "keycloak-universal-auth",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Biblioteca universal de autenticação Keycloak para Angular, React, Vue e Vanilla JS",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -8,24 +8,28 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "default": "./dist/index.js"
     },
     "./angular": {
+      "types": "./dist/angular/index.d.ts",
       "import": "./dist/angular/index.js",
       "require": "./dist/angular/index.cjs",
-      "types": "./dist/angular/index.d.ts"
+      "default": "./dist/angular/index.js"
     },
     "./react": {
+      "types": "./dist/react/index.d.ts",
       "import": "./dist/react/index.js",
       "require": "./dist/react/index.cjs",
-      "types": "./dist/react/index.d.ts"
+      "default": "./dist/react/index.js"
     },
     "./vue": {
+      "types": "./dist/vue/index.d.ts",
       "import": "./dist/vue/index.js",
       "require": "./dist/vue/index.cjs",
-      "types": "./dist/vue/index.d.ts"
+      "default": "./dist/vue/index.js"
     }
   },
   "files": [
@@ -55,36 +59,58 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/jordaobass/keycloak-universal-auth.git"
   },
   "peerDependencies": {
-    "keycloak-js": ">=25.0.0",
-    "@angular/core": ">=16.0.0",
-    "@angular/common": ">=16.0.0",
-    "@angular/router": ">=16.0.0",
+    "@angular/common": ">=17.0.0",
+    "@angular/core": ">=17.0.0",
+    "@angular/router": ">=17.0.0",
+    "keycloak-js": ">=24.0.0",
     "react": ">=18.0.0",
-    "vue": ">=3.3.0",
-    "rxjs": ">=7.0.0"
+    "rxjs": ">=7.0.0",
+    "vue": ">=3.3.0"
   },
   "peerDependenciesMeta": {
-    "@angular/core": { "optional": true },
-    "@angular/common": { "optional": true },
-    "@angular/router": { "optional": true },
-    "react": { "optional": true },
-    "vue": { "optional": true },
-    "rxjs": { "optional": true }
+    "@angular/core": {
+      "optional": true
+    },
+    "@angular/common": {
+      "optional": true
+    },
+    "@angular/router": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    },
+    "rxjs": {
+      "optional": true
+    }
   },
   "devDependencies": {
-    "keycloak-js": "^25.0.6",
-    "typescript": "^5.4.0",
-    "vite": "^5.2.0",
-    "vite-plugin-dts": "^3.8.0",
-    "vitest": "^1.4.0",
-    "@testing-library/react": "^14.2.0",
+    "@angular/common": "^21.2.5",
+    "@angular/compiler": "^21.2.5",
+    "@angular/core": "^21.2.5",
+    "@angular/router": "^21.2.5",
+    "@playwright/test": "^1.58.2",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.0.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
     "@vue/test-utils": "^2.4.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "vue": "^3.4.0",
-    "rxjs": "^7.8.0"
+    "jsdom": "^29.0.1",
+    "keycloak-js": "^26.2.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "rxjs": "^7.8.0",
+    "typescript": "^5.5.0",
+    "vite": "^6.0.0",
+    "vite-plugin-dts": "^4.0.0",
+    "vitest": "^2.0.0",
+    "vue": "^3.5.0"
   }
 }

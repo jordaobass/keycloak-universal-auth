@@ -85,10 +85,11 @@
 
     const auth = new KeycloakAuth({
       url: 'http://localhost:8080',
-      realm: 'meu-realm',
-      clientId: 'meu-app',
+      realm: 'test-realm',
+      clientId: 'test-app',
       initOptions: {
         onLoad: 'check-sso',
+        silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso.html`,
         pkceMethod: 'S256',
       },
     });

@@ -2,6 +2,7 @@ export {
   KeycloakAuth,
   TokenManager,
   EventEmitter,
+  INITIAL_STATE,
   KeycloakAuthError,
   KeycloakInitError,
   TokenRefreshError,

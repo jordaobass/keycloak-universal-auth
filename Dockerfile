@@ -6,8 +6,9 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci --ignore-scripts
 
-COPY tsconfig.json vite.config.ts ./
+COPY tsconfig.json vite.config.ts vitest.config.ts ./
 COPY src/ src/
+COPY tests/ tests/
 
 RUN npm run build
 

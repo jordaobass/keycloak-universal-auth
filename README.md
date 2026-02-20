@@ -1,5 +1,9 @@
 # keycloak-universal-auth
 
+[![CI](https://github.com/jordaobass/keycloak-universal-auth/actions/workflows/ci.yml/badge.svg)](https://github.com/jordaobass/keycloak-universal-auth/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/keycloak-universal-auth)](https://www.npmjs.com/package/keycloak-universal-auth)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Biblioteca universal de autenticação Keycloak para **Angular**, **React**, **Vue** e **Vanilla JS**.
 
 Um core framework-agnostic com adaptadores nativos para cada framework, oferecendo DX nativa (Services, Hooks, Composables) em cada ecossistema.
